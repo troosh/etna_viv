@@ -5,7 +5,7 @@ include $(TOP)/Makefile.inc
 COMMON_FLAGS += -I$(TOP)/resources -I$(TOP)/driver
 CFLAGS += -DDUMP
 CXXFLAGS += 
-LDFLAGS +=  
+LDFLAGS += -lpthread 
 
 TARGETS = rotate_cube alpha_blend cube_companion cubemap_sphere particle_system etna_gears stencil_test displacement mip_cube viv_profile ps_sandbox \
 	  downsample_test

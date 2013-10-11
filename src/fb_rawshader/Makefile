@@ -5,7 +5,7 @@ include $(TOP)/Makefile.inc
 COMMON_FLAGS += -I$(TOP)/resources -I$(TOP)/driver
 CFLAGS += -DDUMP
 CXXFLAGS += 
-LDFLAGS +=
+LDFLAGS += -lpthread 
 
 TARGETS = mip_cube cubemap_sphere stencil_test alpha_blend cube_companion particle_system displacement etna_gears rotate_cube
 COMPANION_OBJS = ../resources/companion_array.o ../resources/companion_mesh.o ../resources/companion_texture.o

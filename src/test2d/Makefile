@@ -5,7 +5,7 @@ include $(TOP)/Makefile.inc
 COMMON_FLAGS += -I$(TOP)/resources -I$(TOP)/driver
 CFLAGS += -DDUMP
 CXXFLAGS += 
-LDFLAGS += -lpng
+LDFLAGS += -lpng -lpthread 
 
 TARGETS = clear2d line2d bitblt2d_from_stream line2d_patterned bitblt2d \
 	  bitblt2d_palette filterblt2d stretchblt2d filterblt2d_fromplanar \
