@@ -298,12 +298,12 @@ int main()
     }
 
     printf("* Video memory:\n");
-    printf("Internal physical: 0x%08x\n", (unsigned)id.u.QueryVideoMemory.internalPhysical);
-    printf("Internal size: 0x%08x\n", (unsigned)id.u.QueryVideoMemory.internalSize);
-    printf("External physical: %08x\n", (unsigned)id.u.QueryVideoMemory.externalPhysical);
-    printf("External size: 0x%08x\n", (unsigned)id.u.QueryVideoMemory.externalSize);
-    printf("Contiguous physical: 0x%08x\n", (unsigned)id.u.QueryVideoMemory.contiguousPhysical);
-    printf("Contiguous size: 0x%08x\n", (unsigned)id.u.QueryVideoMemory.contiguousSize);
+    printf("Internal physical: %p\n", id.u.QueryVideoMemory.internalPhysical);
+    printf("Internal size: 0x%08zx\n", id.u.QueryVideoMemory.internalSize);
+    printf("External physical: %p\n", id.u.QueryVideoMemory.externalPhysical);
+    printf("External size: 0x%08zx\n", id.u.QueryVideoMemory.externalSize);
+    printf("Contiguous physical: %p\n", id.u.QueryVideoMemory.contiguousPhysical);
+    printf("Contiguous size: 0x%08zx\n", id.u.QueryVideoMemory.contiguousSize);
     printf("\n");
 
 #if 0 
