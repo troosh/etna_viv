@@ -5,7 +5,7 @@ include $(TOP)/Makefile.inc
 COMMON_FLAGS += -I$(TOP)/driver
 CFLAGS +=
 CXXFLAGS +=
-LDFLAGS +=
+LDFLAGS += -lpthread 
 
 ifeq ($(ETNAVIV_PROFILER), 1)
 # Define ETNAVIV_PROFILER=1 if the kernel was built with VIVANTE_PROFILER
