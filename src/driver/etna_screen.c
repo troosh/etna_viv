@@ -495,7 +495,7 @@ static void etna_screen_flush_frontbuffer( struct pipe_screen *screen,
             });
     etna_submit_rs_state(ctx, &copy_to_screen);
     DBG_F(ETNA_DBG_FRAME_MSGS,
-            "Queued RS command to flush screen from %08x to %08x stride=%08x width=%i height=%i, ctx %p",
+            "Queued RS command to flush screen from %08x to %08zx stride=%08zx width=%i height=%i, ctx %p",
             rt_resource->levels[0].address,
             drawable->addr, drawable->stride,
             drawable->width, drawable->height, ctx);
