@@ -134,7 +134,7 @@ enum viv_status
 };
 
 /* Type for GPU physical address */
-typedef uint32_t viv_addr_t;
+typedef uintptr_t viv_addr_t;
 
 /* General process handle */
 typedef uint64_t viv_handle_t;

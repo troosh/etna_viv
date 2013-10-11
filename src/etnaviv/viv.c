@@ -200,12 +200,12 @@ int viv_open(enum viv_hw_type hw_type, struct viv_conn **out)
     if((err=viv_invoke(conn, &id)) != gcvSTATUS_OK)
         goto error;
     printf("* Video memory:\n");
-    printf("  Internal physical: 0x%08x\n", (uint32_t)id.u.QueryVideoMemory.internalPhysical);
-    printf("  Internal size: 0x%08x\n", (uint32_t)id.u.QueryVideoMemory.internalSize);
-    printf("  External physical: %08x\n", (uint32_t)id.u.QueryVideoMemory.externalPhysical);
-    printf("  External size: 0x%08x\n", (uint32_t)id.u.QueryVideoMemory.externalSize);
-    printf("  Contiguous physical: 0x%08x\n", (uint32_t)id.u.QueryVideoMemory.contiguousPhysical);
-    printf("  Contiguous size: 0x%08x\n", (uint32_t)id.u.QueryVideoMemory.contiguousSize);
+    printf("  Internal physical: %p\n", id.u.QueryVideoMemory.internalPhysical);
+    printf("  Internal size: %p\n", id.u.QueryVideoMemory.internalSize);
+    printf("  External physical: %p\n", id.u.QueryVideoMemory.externalPhysical);
+    printf("  External size: %p\n", id.u.QueryVideoMemory.externalSize);
+    printf("  Contiguous physical: %p\n", id.u.QueryVideoMemory.contiguousPhysical);
+    printf("  Contiguous size: %p\n", id.u.QueryVideoMemory.contiguousSize);
 
     conn->mem_base = (viv_addr_t)id.u.QueryVideoMemory.contiguousPhysical;
     conn->mem = mmap(NULL, id.u.QueryVideoMemory.contiguousSize, PROT_READ|PROT_WRITE, MAP_SHARED, conn->fd, conn->mem_base);
