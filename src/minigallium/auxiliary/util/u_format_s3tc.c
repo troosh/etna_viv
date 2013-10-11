@@ -104,6 +104,7 @@ util_format_dxtn_pack_t util_format_dxtn_pack = util_format_dxtn_pack_stub;
 void
 util_format_s3tc_init(void)
 {
+#if 0
    static boolean first_time = TRUE;
    struct util_dl_library *library = NULL;
    util_dl_proc fetch_2d_texel_rgb_dxt1;
@@ -118,7 +119,6 @@ util_format_s3tc_init(void)
 
    if (util_format_s3tc_enabled)
       return;
-#if 0
    library = util_dl_open(DXTN_LIBNAME);
    if (!library) {
       debug_printf("couldn't open " DXTN_LIBNAME ", software DXTn "
