@@ -50,11 +50,53 @@
 #include <etnaviv/viv.h>
 #include "gc_abi.h"
 
+static char * DecodePowerState(gceCHIPPOWERSTATE state)
+{
+    switch (state)
+    {
+        case gcvPOWER_ON:
+            return "<POWER_ON>";
+        case gcvPOWER_OFF:
+            return "<POWER_OFF>";
+        case gcvPOWER_IDLE:
+            return "<POWER_IDLE>";
+        case gcvPOWER_SUSPEND:
+            return "<POWER_SUSPEND>";
+        case gcvPOWER_SUSPEND_ATPOWERON:
+            return "<POWER_SUSPEND_ATPOWERON>";
+        case gcvPOWER_OFF_ATPOWERON:
+            return "<POWER_OFF_ATPOWERON>";
+        case gcvPOWER_IDLE_BROADCAST:
+            return "<POWER_IDLE_BROADCAST>";
+        case gcvPOWER_SUSPEND_BROADCAST:
+            return "<POWER_SUSPEND_BROADCAST>";
+        case gcvPOWER_OFF_BROADCAST:
+            return "<POWER_OFF_BROADCAST>";
+        case gcvPOWER_OFF_RECOVERY:
+            return "<POWER_OFF_RECOVERY>";
+#if 0
+        case gcvPOWER_OFF_TIMEOUT:
+            return "<POWER_OFF_TIMEOUT>";
+#endif
+        case gcvPOWER_ON_AUTO:
+            return "<POWER_ON_AUTO>";
+        default:
+            return "<unknow>";
+    }
+}
+
+
+static int device[] = { VIV_HW_3D, VIV_HW_2D, VIV_HW_VG }; // VIV_HW_VG - don't support many ioctl
+
 int main()
 {
     struct viv_conn *conn = 0;
-    int rv = 0;
-    rv = viv_open(VIV_HW_3D, &conn);
+    int n, rv = 0;
+
+    for(n=0; n<3; n++)
+    {
+    printf("********** core: %i ***********\n", device[n]);
+    rv = viv_open(device[n], &conn);
     if(rv!=0)
     {
         fprintf(stderr, "Error opening device\n");
@@ -62,7 +104,29 @@ int main()
     }
 
     gcsHAL_INTERFACE id = {};
+
+    /* Query Power state of GPU */
     memset((void*)&id, 0, sizeof(id));
+    id.command = gcvHAL_QUERY_POWER_MANAGEMENT_STATE;
+    if(viv_invoke(conn, &id) != VIV_STATUS_OK)
+    {
+        perror("Ioctl error");
+        exit(1);
+    }
+    printf("PowerManagement: state=%s isIdle=%d\n", DecodePowerState(id.u.QueryPowerManagement.state),
+           id.u.QueryPowerManagement.isIdle);
+
+
+    /* Power On */
+    memset((void*)&id, 0, sizeof(id));
+    id.command = gcvHAL_SET_POWER_MANAGEMENT_STATE;
+    id.u.SetPowerManagement.state = gcvPOWER_ON;
+    if(viv_invoke(conn, &id) != VIV_STATUS_OK)
+    {
+        perror("Ioctl error");
+        exit(1);
+    }
+
 
     // 0x000..0x200 ok
     // 0x200..0x400 crash
@@ -72,6 +136,7 @@ int main()
     // 0xc00..0xe00 crash
     // 0xe00..0x1000 crash
     // everything above that I've tested: crash
+    memset((void*)&id, 0, sizeof(id));
     for(int address=0x000; address<0x800; address+=4)
     {
         if(address >= 0x200 && address < 0x400)
@@ -83,11 +148,29 @@ int main()
             perror("Ioctl error");
             exit(1);
         }
-        printf("%05x %08x\n", address, id.u.ReadRegisterData.data);
+        if (id.status == gcvSTATUS_OK)
+        {
+            printf("%05x: %08x\n", id.u.ReadRegisterData.address, id.u.ReadRegisterData.data);
+        }
+        else
+        {
+            printf("<< id.status = %d !! >>\n", id.status);
+        }
         fflush(stdout);
     }
 
+    /* Power OnAuto (or need OFF?) */
+    memset((void*)&id, 0, sizeof(id));
+    id.command = gcvHAL_SET_POWER_MANAGEMENT_STATE;
+    id.u.SetPowerManagement.state = gcvPOWER_ON_AUTO;
+    if(viv_invoke(conn, &id) != VIV_STATUS_OK)
+    {
+        perror("Ioctl error");
+    }
+
+
     viv_close(conn);
+    }
     return 0;
 }
 
